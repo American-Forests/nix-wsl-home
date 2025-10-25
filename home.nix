@@ -1,10 +1,15 @@
 { config, pkgs, ... }:
 
+let
+  gitUserName = builtins.getEnv "GIT_USER_NAME";
+  gitUserEmail = builtins.getEnv "GIT_USER_EMAIL";
+  nixUsername = builtins.getEnv "NIX_USERNAME";
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = "twelch";
-  home.homeDirectory = "/home/twelch";
+  home.username = if nixUsername != "" then nixUsername else throw "NIX_USERNAME environment variable not set. Please source setup-home.sh first.";
+  home.homeDirectory = "/home/${config.home.username}";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -81,10 +86,10 @@
 
   programs.git = {
     enable = true;
-  };
-  programs.git.settings.user = {
-    name = "Tim Welch";
-    email = "twelch@americanforests.org";
+    settings.user = {
+      name = if gitUserName != "" then gitUserName else throw "GIT_USER_NAME environment variable not set. Please source setup-home.sh first.";
+      email = if gitUserEmail != "" then gitUserEmail else throw "GIT_USER_EMAIL environment variable not set. Please source setup-home.sh first.";
+    };
   };
 
   programs.gh = {
