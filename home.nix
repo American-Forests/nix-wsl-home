@@ -81,7 +81,24 @@ in
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  programs.starship.enable = true;
+  programs.starship = {
+    enable = true;
+    settings = {
+      # Insert a blank line between shell prompts
+      add_newline = true;
+
+      # Increase the default command timeout to 2 seconds
+      command_timeout = 2000;
+
+      # Ensure prompt stays on single line
+      format = "$all$character";
+
+      # Disable line break between prompt elements
+      line_break = {
+        disabled = true;
+      };
+    };
+  };
   programs.bash.enable = true;
 
   programs.git = {
