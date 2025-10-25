@@ -84,19 +84,83 @@ in
   programs.starship = {
     enable = true;
     settings = {
-      # Insert a blank line between shell prompts
-      add_newline = true;
+      # Pure Prompt preset - mimics the Pure shell theme
+      "$schema" = "https://starship.rs/config-schema.json";
+      
+      format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$python$character";
+      right_format = "$all";
 
-      # Increase the default command timeout to 2 seconds
-      command_timeout = 2000;
-
-      # Ensure prompt stays on single line
-      format = "$all$character";
-
-      # Disable line break between prompt elements
-      line_break = {
-        disabled = true;
+      username = {
+        format = "[$user]($style) ";
+        style_user = "yellow bold";
+        style_root = "red bold";
+        show_always = false;
       };
+
+      hostname = {
+        format = "[$hostname]($style) ";
+        style = "green bold";
+        ssh_only = true;
+        disabled = false;
+      };
+
+      directory = {
+        format = "[$path]($style)[$lock_symbol]($lock_style) ";
+        style = "cyan bold";
+        read_only = " 🔒";
+        truncation_length = 4;
+        truncate_to_repo = true;
+      };
+
+      git_branch = {
+        format = "[$symbol$branch]($style) ";
+        symbol = "";
+        style = "bold purple";
+      };
+
+      git_status = {
+        ahead = "⇡\${count}";
+        behind = "⇣\${count}";
+        diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
+        staged = "[+\${count}](green)";
+        modified = "[!\${count}](yellow)";
+        untracked = "[?\${count}](red)";
+        conflicted = "[=\${count}](red)";
+        deleted = "[-\${count}](red)";
+        renamed = "[»\${count}](purple)";
+        stashed = "[\$\${count}](cyan)";
+        format = "[$all_status$ahead_behind]($style) ";
+        style = "bold red";
+      };
+
+      git_state = {
+        format = "[$state( $progress_current of $progress_total)]($style) ";
+        style = "bright-black";
+      };
+
+      cmd_duration = {
+        format = "[$duration]($style) ";
+        style = "yellow";
+        min_time = 2000;
+        show_milliseconds = false;
+      };
+
+      python = {
+        format = "[$virtualenv]($style) ";
+        style = "bright-black";
+      };
+
+      character = {
+        success_symbol = "[❯](purple)";
+        error_symbol = "[❯](red)";
+        vimcmd_symbol = "[❮](green)";
+      };
+
+      line_break = {
+        disabled = false;
+      };
+
+      add_newline = true;
     };
   };
   programs.bash.enable = true;
