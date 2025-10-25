@@ -19,6 +19,7 @@
   # environment.
   home.packages = [
     pkgs.neofetch
+    pkgs.gh
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -75,6 +76,21 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  programs.startship.enable = true;
+  programs.starship.enable = true;
   programs.bash.enable = true;
+
+  programs.git = {
+    enable = true;
+  };
+  programs.git.settings.user = {
+    name = "Tim Welch";
+    email = "twelch@americanforests.org";
+  };
+
+  programs.gh = {
+    enable = true;
+    gitCredentialHelper = {
+      enable = true;
+    };
+  };
 }
