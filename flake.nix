@@ -15,9 +15,13 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      
+      # Load user configuration to get the username
+      userConfig = import ./user-config.nix;
+      username = userConfig.username;
     in
     {
-      homeConfigurations."afnix" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."${username}" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,

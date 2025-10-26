@@ -26,7 +26,7 @@ nix shell nixpkgs#home-manager --command git clone https://github.com/American-F
 * Commands like `neofetch`, `jq`, `gh`, `awscli`, and `starship` should now be available.
 * Run home-manager from your home directory to get rid of the warning of unread messages (from any directory):
 ```sh
-home-manager news --flake ~/nix-home#afnix
+home-manager news
 ```
 
 Setup of your home environment is now complete.
@@ -38,7 +38,7 @@ Additional notes:
 ~/nix-home/start-home.sh
 ```
 * Feel free to create your own branch of this repo to customize your environment and contribute enhancements back.
-* nix will only see its config files if they are added to the git repository.  For this reason, user-config.nix was added to the git repo.  In order to keep personal info out of commits, local edits to this file are ignored by applying skip-worktree setting to user-config.nix by start-home.sh.  This means that if you want to alter the base user variables, you would have to remove the skiptree setting temporarily, make changes and stage them, before adding the skiptree back.
+* nix will ignore any nix config files not in the git repository.  For this reason, user-config.nix was added to the git repo.  In order to keep personal info out of commits, local edits to this file are ignored by applying skip-worktree setting to user-config.nix by start-home.sh.  This means that if you want to alter the base user variables, you would have to remove the skiptree setting temporarily, make changes and stage them, before adding the skiptree back.
 
 ## Learn More
 
@@ -48,7 +48,11 @@ This Nix setup is derived from the following resources:
 - https://www.youtube.com/watch?v=hLxyENmWZSQ
 - https://determinate.systems/blog/nix-direnv/
 
-## Future
+## Implementation Notes
 
-A simpler setup may be possible where nix files in nix-home are automatically found by symlinking them to ~/.config/home-manager where home-manager looks by default.  A different method for loading user-specific configuration may also be found instead of using environment variables.  More inspiration can be found at:
+This setup automatically creates symlinks from `~/.config/home-manager/` to the nix configuration files in `~/nix-home/`, allowing home-manager to find the configuration files without needing to specify flake paths. The symlinks are created automatically when running `start-home.sh`.
+
+The configuration is designed to work for multiple users - the flake automatically reads the username from `user-config.nix` and creates the appropriate home-manager configuration name dynamically.
+
+More inspiration can be found at:
 - https://yashgarg.dev/posts/nix-devenv/
