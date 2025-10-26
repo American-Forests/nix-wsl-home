@@ -1,15 +1,18 @@
 { config, pkgs, ... }:
 
 let
-  gitUserName = builtins.getEnv "GIT_USER_NAME";
-  gitUserEmail = builtins.getEnv "GIT_USER_EMAIL";
-  nixUsername = builtins.getEnv "NIX_USERNAME";
+  # Use the current working directory to find user-config.nix
+  userConfigPath = ./user-config.nix;
+  userConfig = 
+    if builtins.pathExists userConfigPath
+    then import userConfigPath
+    else throw "user-config.nix not found. Please copy user-config.nix.template to user-config.nix and configure it.";
 in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = if nixUsername != "" then nixUsername else throw "NIX_USERNAME environment variable not set. Please source setup-home.sh first.";
-  home.homeDirectory = "/home/${config.home.username}";
+  home.username = userConfig.username;
+  home.homeDirectory = userConfig.homeDirectory;
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -26,6 +29,7 @@ in
     pkgs.neofetch
     pkgs.gh
     pkgs.jq
+    pkgs.awscli2
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
@@ -85,8 +89,8 @@ in
   programs.git = {
     enable = true;
     settings.user = {
-      name = if gitUserName != "" then gitUserName else throw "GIT_USER_NAME environment variable not set. Please source setup-home.sh first.";
-      email = if gitUserEmail != "" then gitUserEmail else throw "GIT_USER_EMAIL environment variable not set. Please source setup-home.sh first.";
+      name = userConfig.git.userName;
+      email = userConfig.git.userEmail;
     };
   };
 

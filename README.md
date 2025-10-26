@@ -8,37 +8,34 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determin
 * Clone the nix-wsl-home repo to ~/nix-home
 
 ```sh
-nix shell nixpkgs#home-manager --command sh -c "\
-    git clone https://github.com/American-Forests/nix-wsl-home.git nix-home
-"
+nix shell nixpkgs#home-manager --command git clone https://github.com/American-Forests/nix-wsl-home.git nix-home
 ```
 
-* Create setup.home.sh from template:
+* Run the start script (this will prompt you to configure your personal settings):
 ```sh
-cp setup.home.sh.template setup.home.sh
+~/nix-home/start-home.sh
 ```
 
-* Edit your new setup.home.sh and fill out the environment variable values.  Git will ignore this file.
-
-* Start home-manager and configure to startup automatically in the future
+* Edit the `user-config.nix` file with your personal information:
+* Run the start script again to apply your configuration:
 ```sh
-nix shell nixpkgs#home-manager --command sh -c "./nix-home/start-home.sh"
+~/nix-home/start-home.sh
 ```
 
 * Restart your shell and you should get a [starship](https://starship.rs/) prompt with [Pure](https://starship.rs/presets/pure-preset#pure-preset) preset.
-* Commands like `neofetch`, `jq`, `gh`, and `starship` should now be available.
+* Commands like `neofetch`, `jq`, `gh`, `awscli`, and `starship` should now be available.
 * Run home-manager from your home directory to get rid of the warning of unread messages (from any directory):
 ```sh
-home-manager news --flake ~/nix-home#afnix --impure
+home-manager news --flake ~/nix-home#afnix
 ```
 
 Setup of your home environment is now complete.
 
 Additional notes:
-* The `flake` flag in the previous command is needed to point home-manager to the location of flake.nix containing the afnix homeconfig, which points it to home.nix
-* The `impure` flag is needed to ensure load of the environment variables for use by the nix files. 
-* Review the home.nix file to see which software packages are installed.
-* If you make changes to home.nix or flake.nix you can update your environment by running from any directory:
+* **No environment variables or `--impure` flag needed** - this approach uses pure Nix evaluation with a user-config.nix file
+* Git will automatically ignore local changes to your `user-config.nix` file to keep personal info out of commits
+* Review the `home.nix` file to see which software packages are installed
+* If you make changes to `home.nix` or `flake.nix` you can update your environment by running:
 ```sh
 ~/nix-home/start-home.sh
 ```
@@ -51,3 +48,8 @@ This Nix setup is derived from the following resources:
 - https://www.youtube.com/watch?v=BMn_GWg2Ai0
 - https://www.youtube.com/watch?v=hLxyENmWZSQ
 - https://determinate.systems/blog/nix-direnv/
+
+## Future
+
+A simpler setup may be possible where nix files in nix-home are automatically found by symlinking them to ~/.config/home-manager where home-manager looks by default.  A different method for loading user-specific configuration may also be found instead of using environment variables.  More inspiration can be found at:
+- https://yashgarg.dev/posts/nix-devenv/
