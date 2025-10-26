@@ -43,3 +43,11 @@ Additional notes:
 ~/nix-home/start-home.sh
 ```
 * Feel free to create your own branch of this repo to customize your environment and contribute enhancements back.
+
+## Learn More
+
+Learn More
+This Nix setup is derived from the following resources:
+- https://www.youtube.com/watch?v=BMn_GWg2Ai0
+- https://www.youtube.com/watch?v=hLxyENmWZSQ
+- https://determinate.systems/blog/nix-direnv/
