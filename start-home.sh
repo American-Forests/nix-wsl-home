@@ -1,5 +1,6 @@
 #!/bin/bash
-# Wrapper script that sources user config and applies home-manager
+# Wrapper script that sources user config, starts home-manager,
+# and persists the home-manager configuration in future shell sessions.
 
 if [ ! -f "./setup-home.sh" ]; then
     echo "Error: setup-home.sh not found!"
