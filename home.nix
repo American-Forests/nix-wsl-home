@@ -26,9 +26,6 @@ in
     pkgs.neofetch
     pkgs.gh
     pkgs.jq
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
@@ -82,10 +79,27 @@ in
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  programs.bash.enable = true;
+
+  programs.git = {
+    enable = true;
+    settings.user = {
+      name = if gitUserName != "" then gitUserName else throw "GIT_USER_NAME environment variable not set. Please source setup-home.sh first.";
+      email = if gitUserEmail != "" then gitUserEmail else throw "GIT_USER_EMAIL environment variable not set. Please source setup-home.sh first.";
+    };
+  };
+
+  programs.gh = {
+    enable = true;
+    gitCredentialHelper = {
+      enable = true;
+    };
+  };
+
   programs.starship = {
     enable = true;
     settings = {
-      # Pure Prompt preset - mimics the Pure shell theme
+      # Pure Prompt preset - mimics the Pure shell theme, limited nerd font symbol use with fallbacks
       "$schema" = "https://starship.rs/config-schema.json";
       
       format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$python$character";
@@ -164,20 +178,5 @@ in
       add_newline = true;
     };
   };
-  programs.bash.enable = true;
 
-  programs.git = {
-    enable = true;
-    settings.user = {
-      name = if gitUserName != "" then gitUserName else throw "GIT_USER_NAME environment variable not set. Please source setup-home.sh first.";
-      email = if gitUserEmail != "" then gitUserEmail else throw "GIT_USER_EMAIL environment variable not set. Please source setup-home.sh first.";
-    };
-  };
-
-  programs.gh = {
-    enable = true;
-    gitCredentialHelper = {
-      enable = true;
-    };
-  };
 }
