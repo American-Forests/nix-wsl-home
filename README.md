@@ -32,14 +32,13 @@ home-manager news --flake ~/nix-home#afnix
 Setup of your home environment is now complete.
 
 Additional notes:
-* **No environment variables or `--impure` flag needed** - this approach uses pure Nix evaluation with a user-config.nix file
-* Git will automatically ignore local changes to your `user-config.nix` file to keep personal info out of commits
 * Review the `home.nix` file to see which software packages are installed
 * If you make changes to `home.nix` or `flake.nix` you can update your environment by running:
 ```sh
 ~/nix-home/start-home.sh
 ```
 * Feel free to create your own branch of this repo to customize your environment and contribute enhancements back.
+* nix will only see its config files if they are added to the git repository.  For this reason, user-config.nix was added to the git repo.  In order to keep personal info out of commits, local edits to this file are ignored by applying skip-worktree setting to user-config.nix by start-home.sh.  This means that if you want to alter the base user variables, you would have to remove the skiptree setting temporarily, make changes and stage them, before adding the skiptree back.
 
 ## Learn More
 
