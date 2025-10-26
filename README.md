@@ -24,7 +24,7 @@ nix shell nixpkgs#home-manager --command git clone https://github.com/American-F
 
 * Restart your shell and you should get a [starship](https://starship.rs/) prompt with [Pure](https://starship.rs/presets/pure-preset#pure-preset) preset.
 * Commands like `neofetch`, `jq`, `gh`, `awscli`, and `starship` should now be available.
-* Run home-manager from your home directory to get rid of the warning of unread messages (from any directory):
+* Run home-manager news to get rid of the warning of unread messages (from any directory):
 ```sh
 home-manager news
 ```
