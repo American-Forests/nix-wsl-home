@@ -1,14 +1,11 @@
 # Getting started
 
+## Initial Setup
+
 * Clone the nix-wsl-home repo to ~/nix-home
 
 ```sh
 git clone https://github.com/American-Forests/nix-wsl-home.git nix-home
-```
-
-* Run the start script (this will prompt you to configure your personal settings):
-```sh
-nix shell nixpkgs#home-manager --command sh -c "./nix-home/start-home.sh"
 ```
 
 * Open VSCode in Ubuntu and edit the `user-config.nix` file with your personal information:
@@ -16,29 +13,64 @@ nix shell nixpkgs#home-manager --command sh -c "./nix-home/start-home.sh"
 cd nix-home
 code .
 ```
-* Run the start script again to apply your configuration:
+
+* Try loading your home environment (this will prompt you to configure if not done):
 ```sh
-nix shell nixpkgs#home-manager --command sh -c "./nix-home/start-home.sh"
+nix shell nixpkgs#home-manager --command sh -c "./nix-home/load-home.sh"
 ```
-* home-manager should now be started and available to your shell from now on
-* Restart your shell and you should get a [starship](https://starship.rs/) prompt with [Pure](https://starship.rs/presets/pure-preset#pure-preset) preset.  It's a multi-line prompt where the first line displays your current directory in blue, and if your are within a git repository it will display your current branch in pink after that.
-* Commands like `neofetch`, `jq`, `gh`, `awscli`, and `starship` should now be available.
+
+## Choose Your Usage Mode
+
+After initial setup, you have three options for using your home environment:
+
+### Option 1: Manual Loading (Default)
+Load the environment only when you need it:
+```sh
+cd ~/nix-home
+./load-home.sh
+```
+This starts a new shell session with home-manager active. Type `exit` to return to your normal shell.
+
+### Option 2: Enable Automatic Loading
+Make home-manager load automatically in all new shell sessions:
+```sh
+cd ~/nix-home
+./enable-home-auto.sh
+```
+After this, restart your shell and you should get a [starship](https://starship.rs/) prompt with [Pure](https://starship.rs/presets/pure-preset#pure-preset) preset. Commands like `neofetch`, `jq`, `gh`, `awscli`, and `starship` will be available in all shell sessions.
+
+### Option 3: Disable Automatic Loading
+If you previously enabled automatic loading and want to return to manual mode:
+```sh
+cd ~/nix-home
+./disable-home-auto.sh
+```
+
 * Run home-manager news to get rid of the warning of unread messages (from any directory):
 ```sh
 home-manager news
 ```
 
-Setup of your home environment is now complete.
+## Additional Notes
 
-Additional notes:
+### Managing Your Environment
 * Review the `home.nix` file to see which software packages are installed
-* If you make changes to `home.nix` or `flake.nix` you can update your environment by running:
+* If you make changes to `home.nix` or `flake.nix`, apply them by loading the environment again:
 ```sh
-~/nix-home/start-home.sh
+cd ~/nix-home
+./load-home.sh
 ```
 * Feel free to create your own branch of this repo to customize your environment and contribute enhancements back.
-* When you ran the start-home script, the nix files in nix-home were symlinked to ~/.config/home-manager where home-manager looks for them and will load them automatically.
-* You might wonder why user-config.nix is in the git repository and when you added your edits to it that git didn't reflect that there were changes.  The base user-config.nix file is in the repo because nix will ignore and not use any nix config files not in the git repository. And in order to keep personal info out of commits, local edits to this file are ignored by applying skip-worktree setting to user-config.nix by start-home.sh.  This means that if you want to alter the variables in user-config.nix, you would have to remove the skiptree setting temporarily, make changes and stage them, before adding the skiptree back.
+
+### Script Reference
+* `load-home.sh` - Load environment for current session (handles initial setup automatically)
+* `enable-home-auto.sh` - Enable automatic loading on shell startup
+* `disable-home-auto.sh` - Disable automatic loading
+
+### How It Works
+* **Manual mode**: Home environment is only active when you explicitly load it with `load-home.sh`
+* **Auto mode**: When enabled, nix files in nix-home are symlinked to `~/.config/home-manager/` where home-manager automatically discovers them
+* The `user-config.nix` file contains your personal settings and has skip-worktree enabled to prevent accidental commits of personal information
 
 ## Learn More
 
@@ -50,9 +82,12 @@ This Nix setup is derived from the following resources:
 
 ## Implementation Notes
 
-This setup automatically creates symlinks from `~/.config/home-manager/` to the nix configuration files in `~/nix-home/`, allowing home-manager to find the configuration files in nix-home without needing to specify flake paths. The symlinks are created automatically when running `start-home.sh`.
+This setup provides flexible control over when home-manager is active:
 
-The configuration is designed to work for multiple users - the flake automatically reads the username from `user-config.nix` and creates the appropriate home-manager configuration name dynamically.
+* **Non-persistent by default**: The initial setup does not automatically load home-manager in future shell sessions
+* **Symlink-based auto-loading**: When auto-loading is enabled, symlinks are created from `~/.config/home-manager/` to the nix configuration files in `~/nix-home/`
+* **Manual loading option**: Users can temporarily activate the environment without persistence using the load script
+* **Multi-user support**: The flake automatically reads the username from `user-config.nix` and creates the appropriate home-manager configuration name dynamically
 
 More inspiration can be found at:
 - https://yashgarg.dev/posts/nix-devenv/
