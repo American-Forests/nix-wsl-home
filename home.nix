@@ -30,6 +30,8 @@ in
     pkgs.gh
     pkgs.jq
     pkgs.awscli2
+    pkgs.curl
+    pkgs.wget
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
@@ -85,6 +87,7 @@ in
   home.activation.installNvm = config.lib.dag.entryAfter ["writeBoundary"] ''
     if [ ! -d "$HOME/.nvm" ]; then
       echo "Installing NVM..."
+      export PATH="${pkgs.curl}/bin:${pkgs.wget}/bin:$PATH"
       ${pkgs.curl}/bin/curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | ${pkgs.bash}/bin/bash
       echo "NVM installation completed"
     else
