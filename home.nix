@@ -78,13 +78,32 @@ in
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+    NVM_DIR = "$HOME/.nvm";
   };
+
+  # Manual NVM installation using activation script
+  home.activation.installNvm = config.lib.dag.entryAfter ["writeBoundary"] ''
+    if [ ! -d "$HOME/.nvm" ]; then
+      echo "Installing NVM..."
+      ${pkgs.curl}/bin/curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | ${pkgs.bash}/bin/bash
+      echo "NVM installation completed"
+    else
+      echo "NVM already installed, skipping installation"
+    fi
+  '';
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-  programs.bash.enable = true;
+  programs.bash = {
+    enable = true;
+    initExtra = ''
+      # Load NVM
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    '';
+  };
   programs.direnv.enable = true;
-  programs.direnv.nix-direnv.enable = true;
 
   programs.git = {
     enable = true;

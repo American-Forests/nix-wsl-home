@@ -21,7 +21,7 @@ code .
 nix shell nixpkgs#home-manager --command sh -c "./nix-home/start-home.sh"
 ```
 * home-manager should now be started and available to your shell from now on
-* Restart your shell and you should get a [starship](https://starship.rs/) prompt with [Pure](https://starship.rs/presets/pure-preset#pure-preset) preset.
+* Restart your shell and you should get a [starship](https://starship.rs/) prompt with [Pure](https://starship.rs/presets/pure-preset#pure-preset) preset.  It's a multi-line prompt where the first line displays your current directory in blue, and if your are within a git repository it will display your current branch in pink after that.
 * Commands like `neofetch`, `jq`, `gh`, `awscli`, and `starship` should now be available.
 * Run home-manager news to get rid of the warning of unread messages (from any directory):
 ```sh
@@ -50,7 +50,7 @@ This Nix setup is derived from the following resources:
 
 ## Implementation Notes
 
-This setup automatically creates symlinks from `~/.config/home-manager/` to the nix configuration files in `~/nix-home/`, allowing home-manager to find the configuration files without needing to specify flake paths. The symlinks are created automatically when running `start-home.sh`.
+This setup automatically creates symlinks from `~/.config/home-manager/` to the nix configuration files in `~/nix-home/`, allowing home-manager to find the configuration files in nix-home without needing to specify flake paths. The symlinks are created automatically when running `start-home.sh`.
 
 The configuration is designed to work for multiple users - the flake automatically reads the username from `user-config.nix` and creates the appropriate home-manager configuration name dynamically.
 
